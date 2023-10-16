@@ -1,4 +1,4 @@
-const exampleMiddleware = require("./exampleMiddleware");
+const exampleMiddleware = require('./exampleMiddleware');
 
 module.exports = {
   exampleMiddleware,

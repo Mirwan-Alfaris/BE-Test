@@ -1,12 +1,17 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const dotenv = require("dotenv");
+const express = require('express');
+// eslint-disable-next-line no-unused-vars
+const http = require('http');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const WebSocket = require('ws');
 dotenv.config();
 const app = express();
+const wss = new WebSocket.Server({server: app});
+const {callmeWebSocket} = require('./app/controllers/exampleController');
 
 const corsOptions = {
-  origin: ["http://localhost:8080"],
+  origin: ['http://localhost:8080'],
 };
 
 app.use(cors(corsOptions));
@@ -15,10 +20,10 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 // database
-const db = require("./app/models");
+const db = require('./app/models');
 
 db.sequelize.sync();
 
@@ -29,13 +34,32 @@ db.sequelize.sync();
 //   // initial();
 // });
 
+// Web Socket
+wss.on('connection', (ws) => {
+  console.log('Client Connection');
+
+  ws.on('close', () =>{
+    console.log('Client Disconnected');
+  });
+});
+
+// fetch data with interval
+const INTERVAL = 3 * 60 * 1000;
+const sendDataToWebSocket = () => {
+  callmeWebSocket(wss);
+  setTimeout(sendDataToWebSocket, INTERVAL);
+};
+
+sendDataToWebSocket();
+
 // simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Hello" });
+app.get('/', (req, res) => {
+  res.json({message: 'Hello'});
 });
 
 // routes
-// require("./app/routes/exaole.routes")(app);
+require('./app/routes/exampleRoutes')(app);
+require('./app/routes/authRoutes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 7878;

@@ -1,28 +1,37 @@
-const { exampleMiddleware } = require("../middleware");
-const exampleController = require("../controllers/exampleController");
+// eslint-disable-next-line no-unused-vars
+const {exampleMiddleware} = require('../middleware');
+const exampleController = require('../controllers/exampleController');
 
 module.exports = (app) => {
   app.use((req, res, next) => {
     res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+        'Access-Control-Allow-Headers',
+        'x-access-token, Origin, Content-Type, Accept',
     );
     next();
   });
 
-  const router = require("express").Router();
+  // eslint-disable-next-line new-cap
+  const router = require('express').Router();
 
   router.get(
-    "/",
-    [exampleMiddleware.exampleMiddleware],
-    exampleController.exampleFunction
+      '/',
+      exampleController.refactoreMe1,
+  );
+
+  router.post(
+      '/',
+      exampleController.refactoreMe2,
   );
 
   router.get(
-    "/",
-    [exampleMiddleware.exampleMiddleware],
-    exampleController.exampleFunction
+      '/livethreatmap',
+      exampleController.getData,
   );
 
-  app.use("/api/data", router);
+  router.get(
+      '/manager',
+  );
+
+  app.use('/api/data', router);
 };

@@ -1,12 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
   const Example = sequelize.define(
-    "examples",
-    {
-      field: {
-        type: Sequelize.STRING(50),
+      'examples',
+      {
+        field: {
+          // eslint-disable-next-line new-cap
+          type: Sequelize.STRING(50),
+        },
       },
-    },
-    { timestamps: false }
+      {timestamps: false},
   );
   return Example;
 };
